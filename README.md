@@ -11,7 +11,7 @@
 [coveralls-image]: https://coveralls.io/repos/github/ChrisAlderson/ettv-api/badge.svg?branch=master
 [coveralls-url]: https://coveralls.io/github/ChrisAlderson/ettv-api?branch=master
 [david-image]: https://david-dm.org/ChrisAlderson/ettv-api.svg
-[david-url]: (https://david-dm.org/ChrisAlderson/ettv-api
+[david-url]: https://david-dm.org/ChrisAlderson/ettv-api
 [david-dev-image]: https://david-dm.org/ChrisAlderson/ettv-api/dev-status.svg
 [david-dev-url]: https://david-dm.org/ChrisAlderson/ettv-api?type=dev
 [commits-image]: https://img.shields.io/badge/Conventional%20Commits-1.0.0-green.svg
