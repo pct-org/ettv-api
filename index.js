@@ -1,7 +1,7 @@
 'use strict'
 
 const debug = require('debug')
-const got = require('got')
+const https = require('https')
 const { createGunzip } = require('zlib')
 const { stringify } = require('querystring')
 const { URL } = require('url')
@@ -88,17 +88,17 @@ module.exports = class EttvApi {
    */
   _get(endpoint) {
     return new Promise((resolve, reject) => {
-      this._debug(`Making request to url: '${endpoint}'`)
-      let data = ''
+      this._debug(`Making GET request to: '${endpoint}'`)
+      return https.get(endpoint, res => {
+        let data = ''
 
-      got.stream(endpoint)
-        .on('error', err => reject(new Error(err)))
-        .pipe(createGunzip())
-        .on('data', chunk => {
-          data += chunk
-        })
-        .on('end', () => resolve(data))
-        .on('error', err => reject(new Error(err)))
+        res.pipe(createGunzip())
+          .on('error', err => reject(new Error(err)))
+          .on('data', chunk => {
+            data += chunk
+          })
+          .on('end', () => resolve(data))
+      })
     })
   }
 
