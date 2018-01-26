@@ -17,6 +17,8 @@
 [commits-image]: https://img.shields.io/badge/Conventional%20Commits-1.0.0-green.svg
 [commits-url]: https://conventionalcommits.org
 
+An ETTV API wrapper for NodeJS. 
+
 ## Installation
 
 ```
@@ -32,7 +34,7 @@ const EttvApi = require('ettv-api')
 
 const ettvApi = new EttvApi([{
   baseUrl: string,        // The base url of ettv.tv. Defaults to
-                          // 'https://www.ettv.tv/'. 
+                          // 'https://www.ettv.tv/'.
   trackers: Array<string> // A list of trackers to add to the hahs of the
                           // torrents. Defaults to 'exports.defaultTrackers'.
 }])
@@ -44,7 +46,7 @@ const ettvApi = new EttvApi([{
 // ettvApi.getDaily() // For the daily database dump.
 // ettvApi.getFull()  // For the full database dump.
 
-// Both methods return a promise with 
+// Both methods return a promise with
 ettvApi.getDaily().then(res => {
   const [ torrent ] = res
   // Or without array destructuring:

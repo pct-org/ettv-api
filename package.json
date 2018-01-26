@@ -1,7 +1,7 @@
 {
   "name": "ettv-api",
   "version": "1.0.1",
-  "description": "",
+  "description": "An ETTV API wrapper for NodeJS. ",
   "dependencies": {
     "debug": "^3.1.0"
   },
