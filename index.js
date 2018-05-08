@@ -3,8 +3,7 @@
 const debug = require('debug')
 const https = require('https')
 const { createGunzip } = require('zlib')
-const { stringify } = require('querystring')
-const { URL } = require('url')
+const { URL, URLSearchParams } = require('url')
 
 const { name } = require('./package.json')
 
@@ -110,18 +109,21 @@ module.exports = class EttvApi {
   _convertChunk(chunk) {
     const line = chunk.split('|')
     const headers = ['hash', 'title', 'category', 'link']
-
     const torrent = headers.reduce((acc, curr, i) => {
       acc[curr] = line[i]
       return acc
     }, {})
 
-    const qs = stringify({
-      xt: `urn:btih:${torrent.hash}`,
-      dn: torrent.title,
-      tr: this._trackers
+    Object.defineProperty(torrent, 'magnet', {
+      get() {
+        const qs = new URLSearchParams({
+          xt: `urn:btih:${torrent.hash}`,
+          dn: torrent.title,
+          tr: this._trackers
+        })
+        return `$magnet:?${qs}`
+      }
     })
-    torrent.magnet = `$magnet:?${qs}`
 
     return torrent
   }
