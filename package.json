@@ -19,6 +19,7 @@
     "coveralls": "cat ./coverage/lcov.info | coveralls",
     "lint": "eslint {examples,test}/** *.js",
     "release": "standard-version",
+    "pretest": "npm run lint",
     "test": "nyc -r=text -r=lcov mocha --timeout 20000 --exit"
   },
   "engines": {
