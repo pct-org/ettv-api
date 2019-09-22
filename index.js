@@ -42,7 +42,7 @@ exports.defaultTrackers = [
   'udp%3A%2F%2Fopen.stealth.si:80/announce&',
   'udp%3A%2F%2Ftracker.torrent.eu.org:451&',
   'udp%3A%2F%2Ftracker.zer0day.to:1337/announce&',
-  'udp%3A%2F%2Ftracker.open-internet.nl:6969/announce'
+  'udp%3A%2F%2Ftracker.open-internet.nl:6969/announce',
 ]
 
 /**
@@ -60,8 +60,8 @@ module.exports = class EttvApi {
    * of trackers to add to the hahs of the torrents.
    */
   constructor({
-    baseUrl = 'https://www.ettv.tv/',
-    trackers = exports.defaultTrackers
+    baseUrl = 'https://www.ettv.to/',
+    trackers = exports.defaultTrackers,
   } = {}) {
     /**
      * The base url of ettv.
@@ -88,12 +88,18 @@ module.exports = class EttvApi {
   _get(endpoint) {
     return new Promise((resolve, reject) => {
       this._debug(`Making GET request to: '${endpoint}'`)
-      return https.get(endpoint, res => {
+
+      return https.get(endpoint, {
+        headers: {
+          'User-Agent': 'Mozilla/5.0 (Linux) AppleWebkit/534.30 (KHTML, like Gecko) PT/3.8.0',
+        },
+      }, res => {
         let data = ''
 
         res.pipe(createGunzip())
           .on('error', err => reject(new Error(err)))
           .on('data', chunk => {
+            console.log('on data')
             data += chunk
           })
           .on('end', () => resolve(data))
@@ -114,16 +120,13 @@ module.exports = class EttvApi {
       return acc
     }, {})
 
-    Object.defineProperty(torrent, 'magnet', {
-      get() {
-        const qs = new URLSearchParams({
-          xt: `urn:btih:${torrent.hash}`,
-          dn: torrent.title,
-          tr: this._trackers
-        })
-        return `$magnet:?${qs}`
-      }
+    const qs = new URLSearchParams({
+      xt: `urn:btih:${torrent.hash}`,
+      dn: torrent.title,
+      tr: this._trackers,
     })
+
+    torrent.magnet = `$magnet:?${qs}`
 
     return torrent
   }
@@ -140,16 +143,36 @@ module.exports = class EttvApi {
   }
 
   /**
+   * Filters the torrents to only return the allowed categories
+   * @param {Array<Torrent>} torrents - The response converted to an array of torrent
+   * object.
+   * @param categories
+   * @returns {Array<Torrent>} - The response converted to an array of torrent
+   * object.
+   */
+  _filterCategories(torrents, categories) {
+    // If no categories provided return everything
+    if (categories.length === 0) {
+      return torrents
+    }
+
+    return torrents.filter(torrent => categories.indexOf(torrent.category) > -1)
+  }
+
+  /**
    * Get the database dump file from ettv.tv and convert it to an array of
    * Torrent object.
    * @param {!string} file - The name of the file to get. Can either be 'daily`
    * or 'full'.
+   * @package !{Array<string>} categories - The categories to return
    * @returns {Promise<Array<Torrent>, Error>} - The torrents from the database
    * dump.
    */
-  _getFile(file) {
+  _getFile(file, categories) {
     const { href } = new URL(`dumps/ettv_${file}.txt.gz`, this._baseUrl)
-    return this._get(href).then(this._convertToTorrents.bind(this))
+    return this._get(href)
+      .then(this._convertToTorrents.bind(this))
+      .then(torrents => this._filterCategories(torrents, categories))
   }
 
   /**
@@ -157,8 +180,8 @@ module.exports = class EttvApi {
    * @returns {Promise<Array<Torrent>, Error>} - The torrents from the database
    * dump.
    */
-  getDaily() {
-    return this._getFile('daily')
+  getDaily(categories = []) {
+    return this._getFile('daily', categories)
   }
 
   /**
@@ -166,8 +189,8 @@ module.exports = class EttvApi {
    * @returns {Promise<Array<Torrent>, Error>} - The torrents from the database
    * dump.
    */
-  getFull() {
-    return this._getFile('full')
+  getFull(categories = []) {
+    return this._getFile('full', categories)
   }
 
 }

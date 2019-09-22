@@ -10,12 +10,12 @@ const ettvApi = new EttvApi()
 // ettvApi.getFull()  // For the full database dump.
 
 // Both methods return a promise with
-ettvApi.getDaily().then(res => {
-  const [ torrent ] = res
+ettvApi.getDaily(['Movies']).then(res => {
+  const [torrent] = res
   // Or without array destructuring:
   // const torrent = res[0]
 
-  console.log(torrent)
+  console.log(res)
   // {
   //   hash: '97f6b9c0b27061fb76aa4963918668b13644be3a',
   //   title: 'NCIS.New.Orleans.S04E13.HDTV.x264-LOL[ettv]',

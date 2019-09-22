@@ -1,5 +1,5 @@
 {
-  "name": "ettv-api",
+  "name": "@pct-org/ettv-api",
   "version": "1.0.2",
   "description": "An ETTV API wrapper for NodeJS. ",
   "dependencies": {
