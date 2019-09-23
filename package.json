@@ -2,6 +2,28 @@
   "name": "@pct-org/ettv-api",
   "version": "1.0.2",
   "description": "An ETTV API wrapper for NodeJS. ",
+  "keywords": [
+    "api",
+    "ettv",
+    "popcorn",
+    "torrent"
+  ],
+  "license": "MIT",
+  "files": [
+    "index.js"
+  ],
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ChrisAlderson/ettv-api.git"
+  },
+  "scripts": {
+    "coveralls": "cat ./coverage/lcov.info | coveralls",
+    "lint": "eslint {examples,test}/** *.js",
+    "release": "standard-version",
+    "pretest": "npm run lint",
+    "test": "nyc -r=text -r=lcov mocha --timeout 20000 --exit"
+  },
   "dependencies": {
     "debug": "^3.1.0"
   },
@@ -14,29 +36,7 @@
     "nyc": "^11.7.1",
     "standard-version": "^4.3.0"
   },
-  "license": "MIT",
-  "scripts": {
-    "coveralls": "cat ./coverage/lcov.info | coveralls",
-    "lint": "eslint {examples,test}/** *.js",
-    "release": "standard-version",
-    "pretest": "npm run lint",
-    "test": "nyc -r=text -r=lcov mocha --timeout 20000 --exit"
-  },
   "engines": {
     "node": ">=6.13.0"
-  },
-  "keywords": [
-    "ettv",
-    "torrent",
-    "api",
-    "popcorn"
-  ],
-  "files": [
-    "index.js"
-  ],
-  "main": "index.js",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/ChrisAlderson/ettv-api.git"
   }
 }
